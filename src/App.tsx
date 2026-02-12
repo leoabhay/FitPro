@@ -269,4 +269,82 @@ function App() {
                     <WeeklyInsight activities={activities} dietEntries={dietEntries} />
                  </div>
 
+                 {/* Sidebar Column */}
+                 <div className="space-y-6">
+                    <WaterTracker />
+                    <div className="bg-linear-to-br from-indigo-600 to-purple-700 p-8 rounded-[2.5rem] text-white shadow-xl shadow-indigo-500/10 relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
+                        <Target className="w-24 h-24" />
+                      </div>
+                      <h3 className="text-xl font-bold mb-2">Daily Tip</h3>
+                      <p className="text-indigo-100 font-medium text-sm leading-relaxed mb-6">
+                        Drinking water before meals can help with weight loss and improve digestion. Aim for 8 glasses a day!
+                      </p>
+                      <button 
+                        onClick={() => setActiveTab("goals")}
+                        className="bg-white/20 hover:bg-white/30 backdrop-blur-md px-6 py-3 rounded-xl text-sm font-black transition-all"
+                      >
+                        Set New Goal
+                      </button>
+                    </div>
+                 </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "log" && (
+            <div className="grid md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <ActivityForm onSaved={loadData} />
+              <DietForm onSaved={loadData} />
+            </div>
+          )}
+
+          {activeTab === "goals" && (
+            <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <GoalsTracker goals={goals} onGoalsUpdated={loadData} />
+            </div>
+          )}
+
+          {activeTab === "profile" && (
+            <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <Profile />
+            </div>
+          )}
+        </section>
+      </main>
+
+      {/* Mobile Nav */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900/80 backdrop-blur-3xl border-t border-white/5 px-6 py-4 flex justify-between items-center lg:hidden z-50">
+        {[
+          { id: "dashboard", icon: LayoutDashboard, label: "Feed" },
+          { id: "log", icon: PlusCircle, label: "Log" },
+          { id: "goals", icon: Target, label: "Goals" },
+          { id: "profile", icon: User, label: "Me" },
+        ].map((item) => (
+          <button
+            key={item.id}
+            onClick={() => setActiveTab(item.id)}
+            className={`flex flex-col items-center gap-1 transition-all ${
+              activeTab === item.id ? "text-blue-500 scale-110" : "text-slate-500"
+            }`}
+          >
+            <item.icon className="w-6 h-6" />
+            <span className="text-[10px] font-bold uppercase tracking-wider">{item.label}</span>
+          </button>
+        ))}
+      </nav>
+
+      {showNotifications && (
+        <NotificationPanel 
+          notifications={notifications}
+          onClose={() => setShowNotifications(false)}
+          markAsRead={(id) => {
+            setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n))
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
 export default App
