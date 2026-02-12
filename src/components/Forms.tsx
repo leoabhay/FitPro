@@ -1,40 +1,62 @@
-import React, { useState } from "react"
-import { saveActivity, saveDietEntry } from "../lib/db"
-import { Activity, Utensils, Zap, Clock, Flame, ChevronRight } from "lucide-react"
+import React, { useState } from "react";
+import { saveActivity, saveDietEntry } from "../lib/db";
+import {
+  Activity,
+  Utensils,
+  Zap,
+  Clock,
+  Flame,
+  ChevronRight,
+} from "lucide-react";
 
 export function ActivityForm({ onSaved }: { onSaved: () => void }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     exercise: "",
     duration: "",
     calories: "",
     intensity: "moderate",
     notes: "",
-  })
+  });
 
-  const exercises = ["Running", "Walking", "Cycling", "Swimming", "Yoga", "Weightlifting", "HIIT", "Pilates"]
+  const exercises = [
+    "Running",
+    "Walking",
+    "Cycling",
+    "Swimming",
+    "Yoga",
+    "Weightlifting",
+    "HIIT",
+    "Pilates",
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
     try {
       await saveActivity({
         date: new Date().toISOString().split("T")[0],
         exercise: formData.exercise,
         duration: parseInt(formData.duration) || 0,
         calories: parseInt(formData.calories) || 0,
-        intensity: formData.intensity,
+        intensity: formData.intensity as "low" | "moderate" | "high",
         notes: formData.notes,
         timestamp: Date.now(),
-      })
-      setFormData({ exercise: "", duration: "", calories: "", intensity: "moderate", notes: "" })
-      onSaved()
+      });
+      setFormData({
+        exercise: "",
+        duration: "",
+        calories: "",
+        intensity: "moderate",
+        notes: "",
+      });
+      onSaved();
     } catch (error) {
-      console.error("Error saving activity:", error)
+      console.error("Error saving activity:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="bg-slate-900/50 backdrop-blur-xl p-6 rounded-3xl border border-white/10">
@@ -46,16 +68,22 @@ export function ActivityForm({ onSaved }: { onSaved: () => void }) {
       </div>
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-400">Exercise Type</label>
+          <label className="text-sm font-medium text-slate-400">
+            Exercise Type
+          </label>
           <select
             value={formData.exercise}
-            onChange={(e) => setFormData({ ...formData, exercise: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, exercise: e.target.value })
+            }
             className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
             required
           >
             <option value="">Select an exercise...</option>
             {exercises.map((ex) => (
-              <option key={ex} value={ex}>{ex}</option>
+              <option key={ex} value={ex}>
+                {ex}
+              </option>
             ))}
           </select>
         </div>
@@ -68,7 +96,9 @@ export function ActivityForm({ onSaved }: { onSaved: () => void }) {
             <input
               type="number"
               value={formData.duration}
-              onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, duration: e.target.value })
+              }
               className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
               required
             />
@@ -80,7 +110,9 @@ export function ActivityForm({ onSaved }: { onSaved: () => void }) {
             <input
               type="number"
               value={formData.calories}
-              onChange={(e) => setFormData({ ...formData, calories: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, calories: e.target.value })
+              }
               className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
               required
             />
@@ -119,11 +151,11 @@ export function ActivityForm({ onSaved }: { onSaved: () => void }) {
         </button>
       </form>
     </div>
-  )
+  );
 }
 
 export function DietForm({ onSaved }: { onSaved: () => void }) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     mealType: "breakfast",
     mealName: "",
@@ -132,11 +164,11 @@ export function DietForm({ onSaved }: { onSaved: () => void }) {
     carbs: "",
     fat: "",
     notes: "",
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
     try {
       await saveDietEntry({
         date: new Date().toISOString().split("T")[0],
@@ -148,15 +180,23 @@ export function DietForm({ onSaved }: { onSaved: () => void }) {
         fat: parseInt(formData.fat) || 0,
         notes: formData.notes,
         timestamp: Date.now(),
-      })
-      setFormData({ mealType: "breakfast", mealName: "", calories: "", protein: "", carbs: "", fat: "", notes: "" })
-      onSaved()
+      });
+      setFormData({
+        mealType: "breakfast",
+        mealName: "",
+        calories: "",
+        protein: "",
+        carbs: "",
+        fat: "",
+        notes: "",
+      });
+      onSaved();
     } catch (error) {
-      console.error("Error saving diet entry:", error)
+      console.error("Error saving diet entry:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="bg-slate-900/50 backdrop-blur-xl p-6 rounded-3xl border border-white/10">
@@ -169,10 +209,14 @@ export function DietForm({ onSaved }: { onSaved: () => void }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-400">Meal Type</label>
+            <label className="text-sm font-medium text-slate-400">
+              Meal Type
+            </label>
             <select
               value={formData.mealType}
-              onChange={(e) => setFormData({ ...formData, mealType: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, mealType: e.target.value })
+              }
               className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
             >
               <option value="breakfast">Breakfast</option>
@@ -182,11 +226,15 @@ export function DietForm({ onSaved }: { onSaved: () => void }) {
             </select>
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-400">Calories</label>
+            <label className="text-sm font-medium text-slate-400">
+              Calories
+            </label>
             <input
               type="number"
               value={formData.calories}
-              onChange={(e) => setFormData({ ...formData, calories: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, calories: e.target.value })
+              }
               className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
               required
             />
@@ -194,42 +242,58 @@ export function DietForm({ onSaved }: { onSaved: () => void }) {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-400">Meal Name</label>
+          <label className="text-sm font-medium text-slate-400">
+            Meal Name
+          </label>
           <input
             type="text"
             value={formData.mealName}
-            onChange={(e) => setFormData({ ...formData, mealName: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, mealName: e.target.value })
+            }
             className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
             required
-            placeholder="e.g. Avocado Toast"
+            placeholder="e.g. Toast"
           />
         </div>
 
         <div className="grid grid-cols-3 gap-3">
           <div className="space-y-2">
-            <label className="text-xs font-medium text-slate-400">Protein (g)</label>
+            <label className="text-xs font-medium text-slate-400">
+              Protein (g)
+            </label>
             <input
               type="number"
               value={formData.protein}
-              onChange={(e) => setFormData({ ...formData, protein: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, protein: e.target.value })
+              }
               className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs font-medium text-slate-400">Carbs (g)</label>
+            <label className="text-xs font-medium text-slate-400">
+              Carbs (g)
+            </label>
             <input
               type="number"
               value={formData.carbs}
-              onChange={(e) => setFormData({ ...formData, carbs: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, carbs: e.target.value })
+              }
               className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs font-medium text-slate-400">Fat (g)</label>
+            <label className="text-xs font-medium text-slate-400">
+              Fat (g)
+            </label>
             <input
               type="number"
               value={formData.fat}
-              onChange={(e) => setFormData({ ...formData, fat: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, fat: e.target.value })
+              }
               className="w-full bg-slate-800/50 border border-white/10 rounded-2xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
             />
           </div>
@@ -245,5 +309,5 @@ export function DietForm({ onSaved }: { onSaved: () => void }) {
         </button>
       </form>
     </div>
-  )
+  );
 }
